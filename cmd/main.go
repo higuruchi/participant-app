@@ -5,6 +5,7 @@ import (
 )
 
 func main() {
-	server := di.InitializeServerz()
+	server, f := di.InitializeServer()
 	server.Run()
+	f()
 }
