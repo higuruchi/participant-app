@@ -1,5 +1,10 @@
 name: participant-app.yml
 on: [push]
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: hoge
+      run: pwd
   # check: cd deployments
   # check: docker-compose up
