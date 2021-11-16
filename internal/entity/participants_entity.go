@@ -14,7 +14,7 @@ type participantsEntity struct {
 }
 
 type ParticipantsEntity interface {
-	SetParticipants(ParticipantEntity, string) (ParticipantsEntity, error)
+	SetParticipants(ParticipantEntity, grade) (ParticipantsEntity, error)
 	GetParticipants(string) []ParticipantEntity
 }
 
@@ -24,20 +24,20 @@ func NewParticipahtsEntity() ParticipantsEntity {
 
 func (participantsEntity *participantsEntity) SetParticipants(
 	participant ParticipantEntity,
-	grade string,
+	grade grade,
 ) (ParticipantsEntity, error) {
 	switch grade {
-	case "M2":
+	case M2:
 		participantsEntity.M2 = append(participantsEntity.M2, participant)
-	case "M1":
+	case M1:
 		participantsEntity.M1 = append(participantsEntity.M1, participant)
-	case "B4":
+	case B4:
 		participantsEntity.B4 = append(participantsEntity.B4, participant)
-	case "B3":
+	case B3:
 		participantsEntity.B3 = append(participantsEntity.B3, participant)
-	case "B2":
+	case B2:
 		participantsEntity.B2 = append(participantsEntity.B2, participant)
-	case "B1":
+	case B1:
 		participantsEntity.B1 = append(participantsEntity.B1, participant)
 	default:
 		return participantsEntity, errors.New("grade is invalid")

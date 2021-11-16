@@ -7,6 +7,17 @@ import (
 	"errors"
 )
 
+type grade int
+const (
+	B1 grade = iota
+	B2
+	B3
+	B4
+	M1
+	M2
+	Error
+)
+
 type participantEntity struct {
 	id string
 	name string
@@ -15,7 +26,7 @@ type participantEntity struct {
 type ParticipantEntity interface {
 	GetID() string
 	GetName() string
-	DistinguishGrade() (string, error)
+	DistinguishGrade() (grade, error)
 }
 
 func NewParticipantEntity(id string, name string) (ParticipantEntity ,error) {
@@ -38,42 +49,31 @@ func (participantEntity *participantEntity) GetName() string {
 	return participantEntity.name
 }
 
-// この部分汚いw
-func (participantEntity *participantEntity) DistinguishGrade() (string, error) {
+func (participantEntity *participantEntity) DistinguishGrade() (grade, error) {
 	t := time.Now()
-	id := participantEntity.id;
 	nowYear := t.Year()
+	id := participantEntity.GetID();
 	admissionYear, err := strconv.Atoi(fmt.Sprintf("%d%s", 20, id[0:2]))
 	if err != nil {
-		return "", fmt.Errorf("calling strconv.Atoi: %w", err)
+		return Error, fmt.Errorf("calling strconv.Atoi: %w", err)
 	}
-	// 現在Gの学籍番号には対応していない
-	// if id[2] == "G" {
-	// 	switch nowYear-admissionYear {
-	// 	case 0:
-	// 		return "M1", nil
-	// 	case 1:
-	// 		return "M2", nil
-	// 	default:
-	// 		return "", errors.New("invalid year")
-
-	// 	}
-	// }
 
 	switch nowYear-admissionYear {
 	case 0:
-		return "B1", nil
+		if id[2] == uint8('G') {
+			return M1, nil
+		}
+		return B1, nil
 	case 1:
-		return "B2", nil
+		if id[2] == uint8('G') {
+			return M2, nil
+		}
+		return B2, nil
 	case 2:
-		return "B3", nil
+		return B3, nil
 	case 3:
-		return "B4", nil
-	case 4:
-		return "M1", nil
-	case 5:
-		return "M2", nil
+		return B4, nil
 	default:
-		return "", errors.New("invalid year")
+		return Error, errors.New("invalid year")
 	}
 }
