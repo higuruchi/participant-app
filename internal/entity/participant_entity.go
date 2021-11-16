@@ -18,6 +18,12 @@ const (
 	Error
 )
 
+var (
+	ErrInvalidId = errors.New("id is required or invalid")
+	ErrInvalidName = errors.New("name is required or invalid")
+	ErrInvalidYear = errors.New("invalid year")
+)
+
 type participantEntity struct {
 	id string
 	name string
@@ -30,12 +36,14 @@ type ParticipantEntity interface {
 }
 
 func NewParticipantEntity(id string, name string) (ParticipantEntity ,error) {
+
+	// エラー処理が雑
 	if id == "" {
-		return nil, errors.New("id is required or invalid")
+		return nil, ErrInvalidId
 	}
 
 	if (name == "") {
-		return nil, errors.New("name is required or invalid")
+		return nil, ErrInvalidName
 	}
 
 	return &participantEntity{id: id, name: name}, nil
@@ -55,7 +63,7 @@ func (participantEntity *participantEntity) DistinguishGrade() (grade, error) {
 	id := participantEntity.GetID();
 	admissionYear, err := strconv.Atoi(fmt.Sprintf("%d%s", 20, id[0:2]))
 	if err != nil {
-		return Error, fmt.Errorf("calling strconv.Atoi: %w", err)
+		return Error, ErrInvalidYear
 	}
 
 	switch nowYear-admissionYear {
@@ -74,6 +82,6 @@ func (participantEntity *participantEntity) DistinguishGrade() (grade, error) {
 	case 3:
 		return B4, nil
 	default:
-		return Error, errors.New("invalid year")
+		return Error, ErrInvalidYear
 	}
 }
