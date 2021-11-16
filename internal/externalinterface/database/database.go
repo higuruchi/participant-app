@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"database/sql"
-	_"github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/higuruchi/participant-app/internal/interfaceadapter/repository/worker"
 )
 
@@ -19,14 +19,14 @@ type TableRow struct {
 func NewDBHandler() (*DatabaseHandler, func()) {
 	conn, err := sql.Open("mysql", fmt.Sprintf(
 		"%s:%s@(%s:%d)/%s",
-		"user1",
+		"user",
 		"password",
 		"192.168.0.104",
 		3306,
-		"users",
+		"participant-app",
 	))
 	if err != nil {
-		log.Fatal("database connection error %w", err)
+		log.Fatal("database connection error: ", err)
 	}
 	
 	err = conn.Ping()
