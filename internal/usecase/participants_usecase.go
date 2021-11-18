@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"net"
 	"errors"
 	"github.com/higuruchi/participant-app/internal/entity"
 	"github.com/higuruchi/participant-app/internal/usecase/repository"
@@ -13,6 +14,7 @@ type participantsUsecase struct {
 
 type ParticipantsUsecase interface {
 	GetParticipants(int, int, int) (entity.ParticipantsEntity, error)
+	SaveParticipant(int, int, int, int, int, int, net.HardwareAddr) error
 }
 
 func NewParticipantsUsecase(
@@ -67,4 +69,21 @@ func (participantsUsecase *participantsUsecase) GetParticipants(
 	}
 
 	return participantsEntity, nil	
+}
+
+func (participantsUsecase *participantsUsecase) SaveParticipant(
+	year int,
+	month int,
+	date int,
+	hour int,
+	minute int,
+	second int,
+	macaddress net.HardwareAddr,
+) error {	
+	err := participantsUsecase.participantsRepository.SaveParticipant(year, month, date, hour, minute, second, macaddress)
+	if err != nil {
+		return fmt.Errorf("calling participantsUsecase.participantsRepository.SaveParticipant %w", err)
+	}
+
+	return nil
 }

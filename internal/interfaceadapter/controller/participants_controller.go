@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"fmt"
+	"net"
 	"net/http"
 	"strconv"
 	"github.com/labstack/echo/v4"
@@ -24,8 +26,19 @@ type ParticipantsReturnData struct {
 	B4 []ParticipantReturnData `json: "B4"`
 }
 
+type SaveParticipantsData struct {
+	Year int `json: "year"`
+	Month int `json: "month"`
+	Date int `json: date`
+	Hour int `json: hour`
+	Minute int `json: minute`
+	Second int `json: second`
+	Macaddresses []string
+}
+
 type ParticipantsController interface {
 	GetParticipants(echo.Context) error
+	SaveParticipants(c echo.Context) error
 }
 
 
@@ -99,4 +112,34 @@ func (participantsCtrl *participantsController) GetParticipants(c echo.Context) 
 	}
 
 	return c.JSON(http.StatusOK, NewParticipantsReturnData(participants))
+}
+
+func (participantsCtrl *participantsController) SaveParticipants(c echo.Context) error {
+	saveParticipantsData := new(SaveParticipantsData)
+	if err := c.Bind(saveParticipantsData); err != nil {
+		fmt.Println(err)
+		return echo.NewHTTPError(http.StatusBadRequest, "Input data is invalid")
+	}
+	
+	year := saveParticipantsData.Year
+	month := saveParticipantsData.Month
+	date := saveParticipantsData.Date
+	hour := saveParticipantsData.Hour
+	minute := saveParticipantsData.Minute
+	second := saveParticipantsData.Second
+
+	for _, macaddress := range saveParticipantsData.Macaddresses {
+		// 並列処理にしたい感じ〜
+		hw, err := net.ParseMAC(macaddress)
+		if err != nil {
+			return fmt.Errorf("calling net.ParseMAC: %w", err)
+		}
+
+		err = participantsCtrl.participantsUsecase.SaveParticipant(year, month, date, hour, minute, second, hw)
+		if err != nil {
+			return fmt.Errorf("calling participantsCtrl.participantsUsecase.SaveParticipant: %w", err)
+		}
+	}
+
+	return nil
 }

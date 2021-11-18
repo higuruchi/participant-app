@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"net"
 	"github.com/higuruchi/participant-app/internal/usecase/model"
 	"github.com/higuruchi/participant-app/internal/interfaceadapter/repository/worker"
 )
@@ -59,4 +60,27 @@ func (participantsRepository *ParticipantsRepository) GetParticipants(
 	}
 
 	return participants, len(participants), nil
+}
+
+func (participantsRepository *ParticipantsRepository) SaveParticipant(
+	year int,
+	month int,
+	date int,
+	hour int,
+	minute int,
+	second int,
+	macaddress net.HardwareAddr,
+) error {
+	sql := `
+	INSERT INTO packet_logs 
+	(mac_address)
+	VALUES (?);
+	`
+	_, err := participantsRepository.participantsGetter.Execute(sql, macaddress.String())
+	if err != nil {
+		fmt.Println(err)
+		return fmt.Errorf("calling participantsRepository.participantsGetter.Execute: %w", err)
+	}
+
+	return nil
 }
