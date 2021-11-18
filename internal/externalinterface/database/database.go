@@ -16,6 +16,10 @@ type TableRow struct {
 	Rows *sql.Rows
 }
 
+type SQLResult struct {
+	Result sql.Result
+}
+
 func NewDBHandler() (*DatabaseHandler, func()) {
 	conn, err := sql.Open("mysql", fmt.Sprintf(
 		"%s:%s@(%s:%d)/%s",
@@ -63,6 +67,26 @@ func (tableRow *TableRow) Scan(dest ...interface{}) error {
 
 func (tableRow *TableRow) Next() bool {
 	return tableRow.Rows.Next()
+}
+
+func (handler *DatabaseHandler) Execute(statement string, args ...interface{}) (worker.Result, error) {
+	res := new(SQLResult)
+
+	result, err := handler.Conn.Exec(statement, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	res.Result = result
+	return res, nil
+}
+
+func (r *SQLResult) LastInsertId() (int64, error) {
+	return r.Result.LastInsertId()
+}
+
+func (r *SQLResult) RowsAffected() (int64, error) {
+	return r.Result.RowsAffected()
 }
 
 func (tableRow *TableRow) Close() error {
