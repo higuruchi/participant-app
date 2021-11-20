@@ -17,7 +17,14 @@ func NewUserRepository(databaseHandler worker.DatabaseHandler) *UserRepository {
 }
 
 func (userRepository *UserRepository)CreateUser(id string, name string, macaddress net.HardwareAddr) error {
-	fmt.Println("fugahoge")
+	if len(id) <= 0 || 8 < len(id) {
+		return fmt.Errorf("invalid input data")
+	} 
+
+	if len(name) <= 0 || 20 < len(name) {
+		return fmt.Errorf("invalid input data")
+	}
+
 	sql := `
 	INSERT INTO users
 	(id, name, mac_address)
