@@ -13,6 +13,7 @@ type (
 	server struct {
 		echoImplement *echo.Echo
 		participantsCtrl controller.ParticipantsController
+		userCtrl controller.UserController
 	}
 	
 	// customValidator struct {
@@ -24,12 +25,16 @@ type (
 	}
 )
 
-func NewServer(participantsCtrl controller.ParticipantsController) Server {
+func NewServer(
+	participantsCtrl controller.ParticipantsController,
+	userCtrl controller.UserController,
+) Server {
 	e := echo.New();
 	// e.Validator = &CustomValidator{validator: validetor.New()}
 	return &server{
 		echoImplement: e,
 		participantsCtrl: participantsCtrl,
+		userCtrl: userCtrl,
 	}
 }
 
@@ -40,6 +45,7 @@ func (server *server) Run() error {
 
 	server.echoImplement.GET("/participants/:year/:month/:date", server.participantsCtrl.GetParticipants)
 	server.echoImplement.POST("/participants", server.participantsCtrl.SaveParticipants)
+	server.echoImplement.POST("/user", server.userCtrl.CreateUser)
 
 	err := server.echoImplement.Start(":1323")
 	if err != nil {

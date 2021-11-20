@@ -21,7 +21,10 @@ func InitializeServer() (server.Server, func()) {
 	participantsRepository := repository.NewParticipantsRepository(databaseHandler)
 	participantsUsecase := usecase.NewParticipantsUsecase(participantsRepository)
 	participantsController := controller.NewParticipantsController(participantsUsecase)
-	serverServer := server.NewServer(participantsController)
+	userRepository := repository.NewUserRepository(databaseHandler)
+	userUsecase := usecase.NewUserUsecase(userRepository)
+	userController := controller.NewUserController(userUsecase)
+	serverServer := server.NewServer(participantsController, userController)
 	return serverServer, func() {
 		cleanup()
 	}

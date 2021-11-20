@@ -36,6 +36,10 @@ type SaveParticipantsData struct {
 	Macaddresses []string
 }
 
+type SaveParticipantsReturnDat struct {
+	Status bool `json: "status`
+}
+
 type ParticipantsController interface {
 	GetParticipants(echo.Context) error
 	SaveParticipants(c echo.Context) error
@@ -141,5 +145,5 @@ func (participantsCtrl *participantsController) SaveParticipants(c echo.Context)
 		}
 	}
 
-	return nil
+	return c.JSON(http.StatusOK, SaveParticipantsReturnDat{Status: true})
 }
