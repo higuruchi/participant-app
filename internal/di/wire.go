@@ -23,8 +23,10 @@ func InitializeServer() (server.Server, func()) {
 		wire.Build(
 			server.NewServer,
 			controller.NewParticipantsController,
+			controller.NewUserController,
 			usecase.NewParticipantsUsecase,
-
+			interfaceadapterRepository.NewUserRepository,
+			usecase.NewUserUsecase,
 			interfaceadapterRepository.NewParticipantsRepository,
 			database.NewDBHandler,
 
@@ -35,6 +37,10 @@ func InitializeServer() (server.Server, func()) {
 			wire.Bind(
 				new(worker.DatabaseHandler),
 				new(*database.DatabaseHandler),
+			),
+			wire.Bind(
+				new(usecaseRepository.UserRepository),
+				new(*interfaceadapterRepository.UserRepository),
 			),
 		),
 	)
