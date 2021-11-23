@@ -4,6 +4,8 @@ Server side of an application to record participants in a circle
 
 [Router side](https://github.com/yassi-github/participant-app-router)
 
+[Client side](https://github.com/yassi-github/participant-app-client)
+
 # DEMO
 
 # Requirement
@@ -19,11 +21,14 @@ Server side of an application to record participants in a circle
     **GET**
 
 - HTTP request path
+
     ```
     /participants/:year/:month/:date
     ```
+
 - Return value
-    ```
+
+    ```JSON
     {
         "B1": [
             {
