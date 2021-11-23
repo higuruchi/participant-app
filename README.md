@@ -1,8 +1,8 @@
 # participant-app
 
-サークルへの参加者を記録するアプリケーションのサーバサイド
+Server side of an application to record participants in a circle
 
-[ルータサイド](https://github.com/yassi-github/participant-app-router)
+[Router side](https://github.com/yassi-github/participant-app-router)
 
 # DEMO
 
