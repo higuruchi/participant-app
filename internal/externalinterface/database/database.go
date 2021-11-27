@@ -5,6 +5,7 @@ import (
 	"log"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/higuruchi/participant-app/internal/config"
 	"github.com/higuruchi/participant-app/internal/interfaceadapter/repository/worker"
 )
 
@@ -20,14 +21,14 @@ type SQLResult struct {
 	Result sql.Result
 }
 
-func NewDBHandler() (*DatabaseHandler, func()) {
+func NewDBHandler(config *config.Config) (*DatabaseHandler, func()) {
 	conn, err := sql.Open("mysql", fmt.Sprintf(
 		"%s:%s@(%s:%d)/%s",
-		"user",
-		"password",
-		"192.168.0.104",
-		3306,
-		"participant-app",
+		config.DB.User,
+		config.DB.Password,
+		config.DB.IP,
+		config.DB.Port,
+		config.DB.Name,
 	))
 	if err != nil {
 		log.Fatal("database connection error: ", err)

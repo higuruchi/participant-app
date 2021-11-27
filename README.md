@@ -6,13 +6,44 @@ Server side of an application to record participants in a circle
 
 [Client side](https://github.com/yassi-github/participant-app-client)
 
-# DEMO
-
 # Requirement
+
+- docker
+- docker-compose
 
 # Installation
 
+```
+$ git clone https://github.com/higuruchi/participant-app.git
+```
+
 # Usage
+
+- Write config file in yaml and put in the directory under the participant-app 
+
+    ```yaml
+    server:
+        # service port number
+        port: 1323
+    db:
+        # dagbase user name
+        user: user
+        # database user password
+        password: password
+        # database ip address
+        ip: 192.168.0.104
+        #database port number
+        port: 3306
+        # database name
+        name: participant-app
+    ```
+
+- Run the following command
+
+    ```bash
+    $ cd ./participant-app/deployments
+    $ docker-compose up --build
+    ```
 
 ## Get JSON of participants
 

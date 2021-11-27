@@ -7,6 +7,7 @@
 package di
 
 import (
+	"github.com/higuruchi/participant-app/internal/config"
 	"github.com/higuruchi/participant-app/internal/externalinterface/database"
 	"github.com/higuruchi/participant-app/internal/externalinterface/server"
 	"github.com/higuruchi/participant-app/internal/interfaceadapter/controller"
@@ -16,15 +17,15 @@ import (
 
 // Injectors from wire.go:
 
-func InitializeServer() (server.Server, func()) {
-	databaseHandler, cleanup := database.NewDBHandler()
+func InitializeServer(configConfig *config.Config) (server.Server, func()) {
+	databaseHandler, cleanup := database.NewDBHandler(configConfig)
 	participantsRepository := repository.NewParticipantsRepository(databaseHandler)
 	participantsUsecase := usecase.NewParticipantsUsecase(participantsRepository)
 	participantsController := controller.NewParticipantsController(participantsUsecase)
 	userRepository := repository.NewUserRepository(databaseHandler)
 	userUsecase := usecase.NewUserUsecase(userRepository)
 	userController := controller.NewUserController(userUsecase)
-	serverServer := server.NewServer(participantsController, userController)
+	serverServer := server.NewServer(participantsController, userController, configConfig)
 	return serverServer, func() {
 		cleanup()
 	}

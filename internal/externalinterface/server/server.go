@@ -6,11 +6,13 @@ import(
 	"github.com/labstack/echo/v4"
 	// "github.com/go-playground/validator"
 	// "github.com/labstack/echo/v4/middleware"
+	"github.com/higuruchi/participant-app/internal/config"
 	"github.com/higuruchi/participant-app/internal/interfaceadapter/controller"
 )
 
 type (
 	server struct {
+		port int
 		echoImplement *echo.Echo
 		participantsCtrl controller.ParticipantsController
 		userCtrl controller.UserController
@@ -28,10 +30,12 @@ type (
 func NewServer(
 	participantsCtrl controller.ParticipantsController,
 	userCtrl controller.UserController,
+	config *config.Config,
 ) Server {
 	e := echo.New();
 	// e.Validator = &CustomValidator{validator: validetor.New()}
 	return &server{
+		port: config.Server.Port,
 		echoImplement: e,
 		participantsCtrl: participantsCtrl,
 		userCtrl: userCtrl,
@@ -47,7 +51,7 @@ func (server *server) Run() error {
 	server.echoImplement.POST("/participants", server.participantsCtrl.SaveParticipants)
 	server.echoImplement.POST("/user", server.userCtrl.CreateUser)
 
-	err := server.echoImplement.Start(":1323")
+	err := server.echoImplement.Start(fmt.Sprintf(":%d", server.port))
 	if err != nil {
 		return fmt.Errorf("calling Start: %w", err)
 	}
