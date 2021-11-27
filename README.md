@@ -41,7 +41,7 @@ $ git clone https://github.com/higuruchi/participant-app.git
 - Run the following command
 
     ```bash
-    $ cd /participant-app/deployments
+    $ cd ./participant-app/deployments
     $ docker-compose up --build
     ```
 
