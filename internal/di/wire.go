@@ -6,6 +6,8 @@ package di
 import (
 	"github.com/google/wire"
 
+	//config
+	"github.com/higuruchi/participant-app/internal/config"
 	// externalinterface
 	"github.com/higuruchi/participant-app/internal/externalinterface/server"
 	"github.com/higuruchi/participant-app/internal/externalinterface/database"
@@ -18,7 +20,7 @@ import (
 	usecaseRepository "github.com/higuruchi/participant-app/internal/usecase/repository"
 )
 
-func InitializeServer() (server.Server, func()) {
+func InitializeServer(*config.Config) (server.Server, func()) {
 	panic(
 		wire.Build(
 			server.NewServer,

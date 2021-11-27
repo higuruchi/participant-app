@@ -9,14 +9,15 @@ RUN apk  add --update git
 RUN go mod download
 
 COPY ./ /src/
-RUN go build -o ./cmd/main ./cmd/main.go
+RUN  go build -o ./cmd/main ./cmd/main.go
 
 # ---------------------------------
 
 FROM "alpine:3.14"
 
-COPY --from=builder /src/cmd/main /app/main
+COPY    --from=builder /src/cmd/main /app/main
+COPY    --from=builder /src/participant-app-config /etc/participant-app-config
 WORKDIR /app
-RUN apk add --update
+RUN     apk add --update
 
 CMD ["/app/main"]
