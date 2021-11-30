@@ -16,7 +16,11 @@ func NewUserRepository(databaseHandler worker.DatabaseHandler) *UserRepository {
 	}
 }
 
-func (userRepository *UserRepository)CreateUser(id string, name string, macaddress net.HardwareAddr) error {
+func (userRepository *UserRepository)CreateUser(
+	id string,
+	name string,
+	macaddress net.HardwareAddr,
+) error {
 	if len(id) <= 0 || 8 < len(id) {
 		return fmt.Errorf("invalid input data")
 	} 
@@ -33,6 +37,28 @@ func (userRepository *UserRepository)CreateUser(id string, name string, macaddre
 	`
 
 	_, err := userRepository.databaseHandler.Execute(sql, id, name, macaddress.String())
+	if err != nil {
+		return fmt.Errorf("calling userRepository.databaseHandler.Execute: %w", err)
+	}
+
+	return nil
+}
+
+func (userRepository *UserRepository) UpdateUserMacaddr(
+	id string,
+	macaddress net.HardwareAddr,
+) error {
+	if len(id) != 6 {
+		return fmt.Errorf("invalid input data")
+	}
+
+	sql := `
+	UPDATE users
+	SET mac_address=?
+	WHERE id=?
+	`
+
+	_, err := userRepository.databaseHandler.Execute(sql, macaddress.String(), id)
 	if err != nil {
 		return fmt.Errorf("calling userRepository.databaseHandler.Execute: %w", err)
 	}
