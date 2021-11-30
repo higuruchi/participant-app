@@ -147,3 +147,28 @@ $ git clone https://github.com/higuruchi/participant-app.git
     # MAC address
     macaddress=aa:aa:aa:aa:aa:aa
     ```
+
+### Update user macaddr
+
+- Method
+
+    **PUT**
+
+- HTTP request path
+
+    ```
+    /macaddr/:id
+    ```
+
+- HTTP request header
+
+    ```http
+    Content-Type:application/x-www-form-urlencoded
+    ```
+
+- HTTP request body
+
+    ```
+    # macaddress
+    macaddress=aa:aa:aa:aa:aa:aa
+    ```
