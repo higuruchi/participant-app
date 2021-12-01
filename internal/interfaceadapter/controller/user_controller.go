@@ -13,6 +13,7 @@ type userController struct {
 
 type UserController interface {
 	CreateUser(c echo.Context) error
+	UpdateUserMacaddr(c echo.Context) error
 }
 
 type ReturnData struct {
@@ -43,6 +44,26 @@ func (userController *userController) CreateUser(c echo.Context) error {
 	}
 
 	err = userController.userUsecase.CreateUser(id, name, hw)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Internal Server Error")
+	}
+
+	return c.JSON(http.StatusOK, ReturnData{Status: true})
+}
+
+func (userController *userController) UpdateUserMacaddr(c echo.Context) error {
+	id := c.Param("id")
+	if len(id) == 0 {
+		return echo.NewHTTPError(http.StatusBadRequest, "id is required or invalid")
+	}
+
+	macaddress := c.FormValue("macaddress")
+	hw, err := net.ParseMAC(macaddress)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "macaddress is required or invalid")
+	}
+
+	err  = userController.userUsecase.UpdateUserMacaddr(id, hw)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Internal Server Error")
 	}

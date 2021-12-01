@@ -12,6 +12,7 @@ type userUsecase struct {
 
 type UserUsecase interface {
 	CreateUser(string, string, net.HardwareAddr) error
+	UpdateUserMacaddr(string, net.HardwareAddr) error
 }
 
 func NewUserUsecase(userRepository repository.UserRepository) UserUsecase {
@@ -36,6 +37,22 @@ func (userUsecase *userUsecase) CreateUser(
 	err := userUsecase.userRepository.CreateUser(id, name, macaddress)
 	if err != nil {
 		return fmt.Errorf("calling userUsecase: %w", err)
+	}
+
+	return nil
+}
+
+func (userUsecase *userUsecase) UpdateUserMacaddr(
+	id string,
+	macaddress net.HardwareAddr,
+) error {
+	if len(id) > 8 {
+		return fmt.Errorf("invalid input data")
+	}
+
+	err := userUsecase.userRepository.UpdateUserMacaddr(id, macaddress)
+	if err != nil {
+		return fmt.Errorf("calling userUsecase.userRepository.UpdateUserMacaddr: %w", err)
 	}
 
 	return nil
