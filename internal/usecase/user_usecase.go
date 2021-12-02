@@ -3,12 +3,18 @@ package usecase
 import (
 	"fmt"
 	"net"
+	"regexp"
+	"errors"
 	"github.com/higuruchi/participant-app/internal/usecase/repository"
 )
 
 type userUsecase struct {
 	userRepository repository.UserRepository
 }
+
+var (
+	ErrInvalidInputData = errors.New("Invalid input data")
+)
 
 type UserUsecase interface {
 	CreateUser(string, string, net.HardwareAddr) error
@@ -26,15 +32,23 @@ func (userUsecase *userUsecase) CreateUser(
 	name string,
 	macaddress net.HardwareAddr,
 ) error {
-	if len(id) > 8 {
-		return fmt.Errorf("invalid input data")
+	match, err := regexp.MatchString("[1-9]{2}(T|G)[1-9]{3}", id); 
+	if err != nil {
+		return fmt.Errorf("calling regexp.MatchString: %w", err)
+	}
+	if !match {
+		return ErrInvalidInputData
 	}
 
-	if len(id) > 20 {
-		return fmt.Errorf("invalid input data")
+	match, err = regexp.MatchString(".{1,20}", name)
+	if err != nil {
+		return fmt.Errorf("calling regexp.MatchString: %w", err)
+	}
+	if !match {
+		return ErrInvalidInputData
 	}
 
-	err := userUsecase.userRepository.CreateUser(id, name, macaddress)
+	err = userUsecase.userRepository.CreateUser(id, name, macaddress)
 	if err != nil {
 		return fmt.Errorf("calling userUsecase: %w", err)
 	}
@@ -46,11 +60,15 @@ func (userUsecase *userUsecase) UpdateUserMacaddr(
 	id string,
 	macaddress net.HardwareAddr,
 ) error {
-	if len(id) > 8 {
-		return fmt.Errorf("invalid input data")
+	match, err := regexp.MatchString("[1-9]{2}(T|G)[1-9]{3}", id); 
+	if err != nil {
+		return fmt.Errorf("calling regexp.MatchString: %w", err)
+	}
+	if !match {
+		return ErrInvalidInputData
 	}
 
-	err := userUsecase.userRepository.UpdateUserMacaddr(id, macaddress)
+	err = userUsecase.userRepository.UpdateUserMacaddr(id, macaddress)
 	if err != nil {
 		return fmt.Errorf("calling userUsecase.userRepository.UpdateUserMacaddr: %w", err)
 	}

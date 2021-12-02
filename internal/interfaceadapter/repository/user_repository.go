@@ -3,12 +3,18 @@ package repository
 import(
 	"fmt"
 	"net"
+	"errors"
+	"regexp"
 	"github.com/higuruchi/participant-app/internal/interfaceadapter/repository/worker"
 )
 
 type UserRepository struct {
 	databaseHandler worker.DatabaseHandler
 }
+
+var (
+	ErrInvalidInputData = errors.New("Invalid input data")
+)
 
 func NewUserRepository(databaseHandler worker.DatabaseHandler) *UserRepository {
 	return &UserRepository{
@@ -21,12 +27,20 @@ func (userRepository *UserRepository)CreateUser(
 	name string,
 	macaddress net.HardwareAddr,
 ) error {
-	if len(id) <= 0 || 8 < len(id) {
-		return fmt.Errorf("invalid input data")
-	} 
+	match, err := regexp.MatchString("[1-9]{2}(T|G)[1-9]{3}", id); 
+	if err != nil {
+		return fmt.Errorf("calling regexp.MatchString: %w", err)
+	}
+	if !match {
+		return ErrInvalidInputData
+	}
 
-	if len(name) <= 0 || 20 < len(name) {
-		return fmt.Errorf("invalid input data")
+	match, err = regexp.MatchString(".{1,20}", name)
+	if err != nil {
+		return fmt.Errorf("calling regexp.MatchString: %w", err)
+	}
+	if !match {
+		return ErrInvalidInputData
 	}
 
 	sql := `
@@ -36,7 +50,7 @@ func (userRepository *UserRepository)CreateUser(
 	(?, ?, ?)
 	`
 
-	_, err := userRepository.databaseHandler.Execute(sql, id, name, macaddress.String())
+	_, err = userRepository.databaseHandler.Execute(sql, id, name, macaddress.String())
 	if err != nil {
 		return fmt.Errorf("calling userRepository.databaseHandler.Execute: %w", err)
 	}
@@ -48,8 +62,12 @@ func (userRepository *UserRepository) UpdateUserMacaddr(
 	id string,
 	macaddress net.HardwareAddr,
 ) error {
-	if len(id) != 6 {
-		return fmt.Errorf("invalid input data")
+	match, err := regexp.MatchString("[1-9]{2}(T|G)[1-9]{3}", id); 
+	if err != nil {
+		return fmt.Errorf("calling regexp.MatchString: %w", err)
+	}
+	if !match {
+		return ErrInvalidInputData
 	}
 
 	sql := `
@@ -58,7 +76,7 @@ func (userRepository *UserRepository) UpdateUserMacaddr(
 	WHERE id=?
 	`
 
-	_, err := userRepository.databaseHandler.Execute(sql, macaddress.String(), id)
+	_, err = userRepository.databaseHandler.Execute(sql, macaddress.String(), id)
 	if err != nil {
 		return fmt.Errorf("calling userRepository.databaseHandler.Execute: %w", err)
 	}
