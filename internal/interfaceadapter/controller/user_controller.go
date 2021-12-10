@@ -29,7 +29,7 @@ func NewUserController(userUsecase usecase.UserUsecase) UserController {
 
 func (userController *userController) CreateUser(c echo.Context) error {
 	id := c.FormValue("id")
-	match, err := regexp.MatchString("[1-9]{2}(T|G)[1-9]{3}", id); 
+	match, err := regexp.MatchString("^[0-9]{2}(T|G)[0-9]{3}$", id); 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Internal Server Error")
 	}
@@ -62,7 +62,7 @@ func (userController *userController) CreateUser(c echo.Context) error {
 
 func (userController *userController) UpdateUserMacaddr(c echo.Context) error {
 	id := c.FormValue("id")
-	match, err := regexp.MatchString("[1-9]{2}(T|G)[1-9]{3}", id); 
+	match, err := regexp.MatchString("^[0-9]{2}(T|G)[0-9]{3}$", id); 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Internal Server Error")
 	}

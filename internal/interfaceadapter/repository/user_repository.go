@@ -27,7 +27,7 @@ func (userRepository *UserRepository)CreateUser(
 	name string,
 	macaddress net.HardwareAddr,
 ) error {
-	match, err := regexp.MatchString("[1-9]{2}(T|G)[1-9]{3}", id); 
+	match, err := regexp.MatchString("^[0-9]{2}(T|G)[0-9]{3}$", id); 
 	if err != nil {
 		return fmt.Errorf("calling regexp.MatchString: %w", err)
 	}
@@ -62,7 +62,7 @@ func (userRepository *UserRepository) UpdateUserMacaddr(
 	id string,
 	macaddress net.HardwareAddr,
 ) error {
-	match, err := regexp.MatchString("[1-9]{2}(T|G)[1-9]{3}", id); 
+	match, err := regexp.MatchString("^[0-9]{2}(T|G)[0-9]{3}$", id); 
 	if err != nil {
 		return fmt.Errorf("calling regexp.MatchString: %w", err)
 	}
