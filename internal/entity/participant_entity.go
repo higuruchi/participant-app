@@ -5,6 +5,7 @@ import (
 	"time"
 	"strconv"
 	"errors"
+	"regexp"
 )
 
 type grade int
@@ -37,12 +38,19 @@ type ParticipantEntity interface {
 
 func NewParticipantEntity(id string, name string) (ParticipantEntity ,error) {
 
-	// エラー処理が雑
-	if id == "" {
+	match, err := regexp.MatchString("^[0-9]{2}(T|G)[0-9]{3}$", id);
+	if err != nil {
+		return nil, fmt.Errorf("calling regrep.MatchString: %v", err)
+	}
+	if !match {
 		return nil, ErrInvalidId
 	}
 
-	if (name == "") {
+	match, err = regexp.MatchString(".+", name);
+	if err != nil {
+		return nil, fmt.Errorf("calling regrep.MatchString: %v", err)
+	}
+	if !match {
 		return nil, ErrInvalidName
 	}
 

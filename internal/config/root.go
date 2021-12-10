@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"errors"
+	"regexp"
 	"github.com/spf13/viper"
 )
 
@@ -71,11 +72,20 @@ func (config *Config)configValidation() error {
 		return ErrInvalidDBIP
 	}
 
-	if len(config.DB.User) == 0 {
+	match, err := regexp.MatchString(".+", config.DB.User)
+	if err != nil {
+		return fmt.Errorf("calling regexp.MatchString: %w", err)
+	}
+	if !match {
 		return ErrInvalidDBUser
 	}
 
-	if len(config.DB.Password) == 0 {
+
+	match, err = regexp.MatchString(".+", config.DB.Password)
+	if err != nil {
+		return fmt.Errorf("calling regexp.MatchString: %w", err)
+	}
+	if !match {
 		return ErrInvalidDBPassword
 	}
 
@@ -83,7 +93,11 @@ func (config *Config)configValidation() error {
 		return ErrInvalidDBPort
 	}
 
-	if len(config.DB.Name) == 0 {
+	match, err = regexp.MatchString(".+", config.DB.Name)
+	if err != nil {
+		return fmt.Errorf("calling regexp.MatchString: %w", err)
+	}
+	if !match {
 		return ErrInvalidDBName
 	}
 

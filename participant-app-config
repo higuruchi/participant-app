@@ -3,6 +3,6 @@ server:
 db:
     user: user
     password: password
-    ip: 192.168.0.104
-    port: 3306
+    ip: 133.92.165.48
+    port: 59713
     name: participant-app

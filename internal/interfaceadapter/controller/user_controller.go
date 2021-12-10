@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net"
+	"regexp"
 	"net/http"
 	"github.com/labstack/echo/v4"
 	"github.com/higuruchi/participant-app/internal/usecase"
@@ -28,12 +29,20 @@ func NewUserController(userUsecase usecase.UserUsecase) UserController {
 
 func (userController *userController) CreateUser(c echo.Context) error {
 	id := c.FormValue("id")
-	if len(id) <= 0 || 8 < len(id) {
+	match, err := regexp.MatchString("^[0-9]{2}(T|G)[0-9]{3}$", id); 
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Internal Server Error")
+	}
+	if !match {
 		return echo.NewHTTPError(http.StatusBadRequest, "id is required or invalid")
 	} 
 
 	name := c.FormValue("name")
-	if len(name) <= 0 || 20 < len(name) {
+	match, err = regexp.MatchString(".{1, 20}", name)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Internal Server Error")
+	}
+	if !match {
 		return echo.NewHTTPError(http.StatusBadRequest, "name is required or invalid")
 	}
 
@@ -52,8 +61,12 @@ func (userController *userController) CreateUser(c echo.Context) error {
 }
 
 func (userController *userController) UpdateUserMacaddr(c echo.Context) error {
-	id := c.Param("id")
-	if len(id) == 0 {
+	id := c.FormValue("id")
+	match, err := regexp.MatchString("^[0-9]{2}(T|G)[0-9]{3}$", id); 
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Internal Server Error")
+	}
+	if !match {
 		return echo.NewHTTPError(http.StatusBadRequest, "id is required or invalid")
 	}
 
