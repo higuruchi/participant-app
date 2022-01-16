@@ -36,7 +36,7 @@ func NewDBHandler(config *config.Config) (*DatabaseHandler, func()) {
 	
 	err = conn.Ping()
 	if err!= nil {
-		log.Fatal("database connection error %w", err)
+		log.Fatal("database connection error: ", err)
 	}
 	return &DatabaseHandler{
 		Conn: conn,
