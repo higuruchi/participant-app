@@ -35,10 +35,10 @@ func (userController *userController) CreateUser(c echo.Context) error {
 	}
 	if !match {
 		return echo.NewHTTPError(http.StatusBadRequest, "id is required or invalid")
-	} 
+	}
 
 	name := c.FormValue("name")
-	match, err = regexp.MatchString(".{1, 20}", name)
+	match, err = regexp.MatchString(".{1,20}", name)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Internal Server Error")
 	}
@@ -54,7 +54,7 @@ func (userController *userController) CreateUser(c echo.Context) error {
 
 	err = userController.userUsecase.CreateUser(id, name, hw)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Internal Server Error")
+			return echo.NewHTTPError(http.StatusBadRequest, "Internal Server Error")
 	}
 
 	return c.JSON(http.StatusOK, ReturnData{Status: true})
