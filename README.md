@@ -138,14 +138,7 @@ $ git clone https://github.com/higuruchi/participant-app.git
 - HTTP request body
 
     ```
-    # user id
-    id=19T999
-
-    # name of user
-    name=kagawa-taro
-
-    # MAC address
-    macaddress=aa:aa:aa:aa:aa:aa
+    id=19T999&name=kagawataro&macaddress=aa%3Aaa%3Aaa%3Aaa%3Aaa%3Aaa
     ```
 
 ### Update user macaddr
@@ -170,5 +163,5 @@ $ git clone https://github.com/higuruchi/participant-app.git
 
     ```
     # macaddress
-    macaddress=aa:aa:aa:aa:aa:aa
+    macaddress=aa%3Aaa%3Aaa%3Aaa%3Aaa%3Aaa
     ```
