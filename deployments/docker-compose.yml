@@ -4,5 +4,44 @@ services:
     build:
       context: ../
       dockerfile: ./build/Dockerfile
+    depends_on:
+      participant-app-db:
+        condition: service_healthy
     ports:
       - "1323:1323"
+    networks:
+      participant_app:
+        ipv4_address: 172.22.2.70
+
+  participant-app-db:
+    image: mariadb:10.3.32-focal
+    container_name: participant-app-db
+    environment:
+      - MARIADB_USER=user
+      - MARIADB_PASSWORD=password
+      - MARIADB_ROOT_PASSWORD=password
+      - MARIADB_DATABASE=participant-app
+    healthcheck:
+      test: mysqladmin ping --host=localhost --port=3306 --user=user --password=password --silent
+      interval: 3s
+      timeout: 2s
+      retries: 5
+    volumes:
+      - ../db_data:/var/lib/postgresql/data
+      - ../docs/database.sql:/docker-entrypoint-initdb.d/database.sql
+    ports:
+      - "59713:3306"
+    networks:
+      participant_app:
+        ipv4_address: 172.22.2.71
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  participant_app:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.22.2.0/24
