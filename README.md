@@ -97,7 +97,7 @@ $ git clone https://github.com/higuruchi/participant-app.git
 - HTTP request header
 
     ```http
-    Content-Type:application/json; charset=UTF-8
+    Content-Type:application/json; 
     ```
 
 - HTTP request body
