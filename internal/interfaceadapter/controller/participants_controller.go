@@ -29,7 +29,7 @@ type ParticipantsReturnData struct {
 type SaveParticipantsData struct {
 	Year int `json: "year"`
 	Month int `json: "month"`
-	Date int `json: date`
+	Day int `json: day`
 	Hour int `json: hour`
 	Minute int `json: minute`
 	Second int `json: second`
@@ -105,12 +105,12 @@ func (participantsCtrl *participantsController) GetParticipants(c echo.Context) 
 		return echo.NewHTTPError(http.StatusBadRequest, "month is required or invalid")
 	}
 
-	date, err := strconv.Atoi(c.Param("date"))
-	if err != nil || date < 1 || 31 < date{
-		return echo.NewHTTPError(http.StatusBadRequest, "date is required or invalid")
+	day, err := strconv.Atoi(c.Param("day"))
+	if err != nil || day < 1 || 31 < day {
+		return echo.NewHTTPError(http.StatusBadRequest, "day is required or invalid")
 	}
 
-	participants, err := participantsCtrl.participantsUsecase.GetParticipants(year, month, date)
+	participants, err := participantsCtrl.participantsUsecase.GetParticipants(year, month, day)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "internal server error")
 	}
@@ -127,7 +127,7 @@ func (participantsCtrl *participantsController) SaveParticipants(c echo.Context)
 	
 	year := saveParticipantsData.Year
 	month := saveParticipantsData.Month
-	date := saveParticipantsData.Date
+	day := saveParticipantsData.Day
 	hour := saveParticipantsData.Hour
 	minute := saveParticipantsData.Minute
 	second := saveParticipantsData.Second
@@ -139,7 +139,7 @@ func (participantsCtrl *participantsController) SaveParticipants(c echo.Context)
 			return fmt.Errorf("calling net.ParseMAC: %w", err)
 		}
 
-		err = participantsCtrl.participantsUsecase.SaveParticipant(year, month, date, hour, minute, second, hw)
+		err = participantsCtrl.participantsUsecase.SaveParticipant(year, month, day, hour, minute, second, hw)
 		if err != nil {
 			return fmt.Errorf("calling participantsCtrl.participantsUsecase.SaveParticipant: %w", err)
 		}
