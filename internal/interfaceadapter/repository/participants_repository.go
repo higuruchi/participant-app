@@ -71,12 +71,13 @@ func (participantsRepository *ParticipantsRepository) SaveParticipant(
 	second int,
 	macaddress net.HardwareAddr,
 ) error {
+	timestamp := fmt.Sprintf("%d-%d-%d %d:%d:%d", year, month, date, hour, minute, second)
 	sql := `
-	INSERT INTO packet_logs 
-	(mac_address)
-	VALUES (?);
+	INSERT INTO packet_logs
+	(transit_time, mac_address)
+	VALUES (?, ?);
 	`
-	_, err := participantsRepository.participantsGetter.Execute(sql, macaddress.String())
+	_, err := participantsRepository.participantsGetter.Execute(sql, timestamp, macaddress.String())
 	if err != nil {
 		fmt.Println(err)
 		return fmt.Errorf("calling participantsRepository.participantsGetter.Execute: %w", err)
