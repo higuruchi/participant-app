@@ -23,7 +23,7 @@ services:
       - MARIADB_DATABASE=participant-app
     healthcheck:
       test: mysqladmin ping --host=localhost --port=3306 --user=user --password=password --silent
-      interval: 3s
+      interval: 15s
       timeout: 2s
       retries: 5
     volumes:
