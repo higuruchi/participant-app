@@ -49,6 +49,8 @@ func (participantsRepository *ParticipantsRepository) GetParticipants(
 		return nil, -1, fmt.Errorf("calling participantsRepository.participantsGetter.Query: %w", err)
 	}
 
+	participantMap := make(map[string]string)
+
 	for rows.Next() {
 		var participant model.Participant
 
@@ -56,7 +58,11 @@ func (participantsRepository *ParticipantsRepository) GetParticipants(
 		if err != nil {
 			return nil, -1, fmt.Errorf("calling rows.Scan: %w", err)
 		}
-		participants = append(participants, participant)
+
+		if _, ok := participantMap[participant.ID]; !ok {
+			participantMap[participant.ID] = participant.Name
+			participants = append(participants, participant)
+		}
 	}
 
 	return participants, len(participants), nil
