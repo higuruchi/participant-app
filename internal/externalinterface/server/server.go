@@ -2,7 +2,6 @@ package server
 
 import(
 	"fmt"
-	"net/http"
 	"github.com/labstack/echo/v4"
 	"github.com/higuruchi/participant-app/internal/config"
 	"github.com/higuruchi/participant-app/internal/interfaceadapter/controller"
@@ -37,11 +36,7 @@ func NewServer(
 }
 
 func (server *server) Run() error {
-	server.echoImplement.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello World!")
-	})
-
-	server.echoImplement.GET("/participants/:year/:month/:date", server.participantsCtrl.GetParticipants)
+	server.echoImplement.GET("/participants/:year/:month/:day", server.participantsCtrl.GetParticipants)
 	server.echoImplement.POST("/participants", server.participantsCtrl.SaveParticipants)
 	server.echoImplement.POST("/user", server.userCtrl.CreateUser)
 	server.echoImplement.PUT("/macaddr/:id", server.userCtrl.UpdateUserMacaddr)

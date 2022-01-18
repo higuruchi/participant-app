@@ -20,7 +20,7 @@ func NewParticipantsRepository(
 func (participantsRepository *ParticipantsRepository) GetParticipants(
 	year int,
 	month int,
-	date int,
+	day int,
 ) ([]model.Participant, int, error) {
 	var participants []model.Participant
 
@@ -40,8 +40,8 @@ func (participantsRepository *ParticipantsRepository) GetParticipants(
 	WHERE packet_logs.transit_time BETWEEN ? AND ?
 	`
 
-	from := fmt.Sprintf("%d-%d-%d 00:00:00", year, month, date)
-	end := fmt.Sprintf("%d-%d-%d 23:59:59", year, month, date)
+	from := fmt.Sprintf("%d-%d-%d 00:00:00", year, month, day)
+	end := fmt.Sprintf("%d-%d-%d 23:59:59", year, month, day)
 
 	rows, err := participantsRepository.participantsGetter.Query(sql, from, end)
 	defer rows.Close()
@@ -65,13 +65,13 @@ func (participantsRepository *ParticipantsRepository) GetParticipants(
 func (participantsRepository *ParticipantsRepository) SaveParticipant(
 	year int,
 	month int,
-	date int,
+	day int,
 	hour int,
 	minute int,
 	second int,
 	macaddress net.HardwareAddr,
 ) error {
-	timestamp := fmt.Sprintf("%d-%d-%d %d:%d:%d", year, month, date, hour, minute, second)
+	timestamp := fmt.Sprintf("%d-%d-%d %d:%d:%d", year, month, day, hour, minute, second)
 	sql := `
 	INSERT INTO packet_logs
 	(transit_time, mac_address)

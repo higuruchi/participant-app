@@ -28,7 +28,7 @@ func NewParticipantsUsecase(
 func (participantsUsecase *participantsUsecase) GetParticipants(
 	year int,
 	month int,
-	date int,
+	day int,
 ) (entity.ParticipantsEntity, error) {
 
 	if year < 0 {
@@ -39,11 +39,11 @@ func (participantsUsecase *participantsUsecase) GetParticipants(
 		return nil, errors.New("syntax error; not enough arguments or value is out of range")
 	}
 
-	if date < 1 || 31 < date {
+	if day < 1 || 31 < day {
 		return nil, errors.New("syntax error; not enough arguments or value is out of range")
 	}
 
-	participants, num, err := participantsUsecase.participantsRepository.GetParticipants(year, month, date)
+	participants, num, err := participantsUsecase.participantsRepository.GetParticipants(year, month, day)
 	if err != nil {
 		return nil, fmt.Errorf("calling participantsUsecase.participantsRepository.GetParticipants: %w", err)
 	}
@@ -74,13 +74,13 @@ func (participantsUsecase *participantsUsecase) GetParticipants(
 func (participantsUsecase *participantsUsecase) SaveParticipant(
 	year int,
 	month int,
-	date int,
+	day int,
 	hour int,
 	minute int,
 	second int,
 	macaddress net.HardwareAddr,
 ) error {	
-	err := participantsUsecase.participantsRepository.SaveParticipant(year, month, date, hour, minute, second, macaddress)
+	err := participantsUsecase.participantsRepository.SaveParticipant(year, month, day, hour, minute, second, macaddress)
 	if err != nil {
 		return fmt.Errorf("calling participantsUsecase.participantsRepository.SaveParticipant %w", err)
 	}
