@@ -54,7 +54,7 @@ $ git clone https://github.com/higuruchi/participant-app.git
 - HTTP request path
 
     ```
-    /participants/:year/:month/:date
+    /participants/:year/:month/:day
     ```
 
 - Return value
