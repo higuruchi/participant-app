@@ -132,13 +132,17 @@ $ git clone https://github.com/higuruchi/participant-app.git
 - HTTP request header
 
     ```http
-    Content-Type:application/x-www-form-urlencoded
+    Content-Type:application/json
     ```
 
 - HTTP request body
 
-    ```
-    id=19T999&name=kagawataro&macaddress=aa%3Aaa%3Aaa%3Aaa%3Aaa%3Aaa
+    ```json
+    {
+        "id": "19T999",
+        "name": "test-name",
+        "macaddress": "3c:06:30:43:3f:51"
+    }
     ```
 
 ### Update user macaddr
@@ -150,18 +154,20 @@ $ git clone https://github.com/higuruchi/participant-app.git
 - HTTP request path
 
     ```
-    /macaddr/:id
+    /macaddr
     ```
 
 - HTTP request header
 
     ```http
-    Content-Type:application/x-www-form-urlencoded
+    Content-Type:application/json
     ```
 
 - HTTP request body
 
-    ```
-    # macaddress
-    macaddress=aa%3Aaa%3Aaa%3Aaa%3Aaa%3Aaa
+    ```json
+    {
+        "id": "19T999",
+        "macaddress": "3c:06:30:43:3f:51"
+    }
     ```
