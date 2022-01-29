@@ -39,7 +39,7 @@ func (server *server) Run() error {
 	server.echoImplement.GET("/participants/:year/:month/:day", server.participantsCtrl.GetParticipants)
 	server.echoImplement.POST("/participants", server.participantsCtrl.SaveParticipants)
 	server.echoImplement.POST("/user", server.userCtrl.CreateUser)
-	server.echoImplement.PUT("/macaddr/:id", server.userCtrl.UpdateUserMacaddr)
+	server.echoImplement.PUT("/macaddr", server.userCtrl.UpdateUserMacaddr)
 
 	err := server.echoImplement.Start(fmt.Sprintf(":%d", server.port))
 	if err != nil {
