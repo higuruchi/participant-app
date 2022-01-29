@@ -68,6 +68,11 @@ func (participantEntity *participantEntity) GetName() string {
 func (participantEntity *participantEntity) DistinguishGrade() (grade, error) {
 	t := time.Now()
 	nowYear := t.Year()
+	nowMonth := t.Month()
+	if 1 <= nowMonth && nowMonth <= 3 {
+		nowYear--
+	}
+
 	id := participantEntity.GetID();
 	admissionYear, err := strconv.Atoi(fmt.Sprintf("%d%s", 20, id[0:2]))
 	if err != nil {
